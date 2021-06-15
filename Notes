@@ -21,7 +21,7 @@ The beginning stub "FOR" is a way to get the for loop going.
 
 "/F" indicates that we're running the loop over a set of data from a file.
 
-["options"]:
+["options"]: (encase all options in a pair of quotation marks)
       delims=xxx   The delimiter character(s). Default for strings = a space or TAB.
 
       skip=n       A number of lines to skip at the beginning of the file. 
@@ -45,7 +45,7 @@ The beginning stub "FOR" is a way to get the for loop going.
 command is simply your usual command (ex. mv \File.txt \Folder\)
 
 
-  FOR /F eol=; tokens=2,3* delims=, %i in (myfile.txt) do @echo %i %j %k
+  FOR /F "eol=; tokens=2,3* delims=," %i in (myfile.txt) do @echo %i %j %k
   
 In this example:
   ignores lines that begin with a semicolon
@@ -56,16 +56,16 @@ In this example:
   
 So, to do a mass move, create a text file with your files to move with some delimeter separating them from the directory to move them to.  An example of this might be:
 
-  FOR /F tokens=1,2 delims=| %i IN (move.txt) DO move %i %j
+  FOR /F "tokens=1,2 delims=|;" %i IN (move.txt) DO move %i %j
 
 And move.txt might look like:
 
   1.pdf|C:\Users\Username\Desktop\New Folder\
-  2.pdf|C:\Users\Username\Desktop\New Folder\
+  2.pdf;C:\Users\Username\Desktop\New Folder\
   
-The uses of a pipe delimeter is demonstrated to show the format, especially if there are spaces in the directories.  You can also just enclose the whole thing with quotation marks to avoid doing this.  Here's what that would look like:
+The uses of a pipe delimeter and semicolon delimeter is demonstrated to show the format, especially if there are spaces in the directories.  This also shows that you can have multiple delimeters (no separation necessary).  You can also just enclose the whole thing with quotation marks to avoid doing this.  Here's what that would look like:
 
-  FOR /F tokens=1,2 %i IN (move.txt) DO move %i %j
+  FOR /F "tokens=1,2" %i IN (move.txt) DO move %i %j
   
 move.txt
 
