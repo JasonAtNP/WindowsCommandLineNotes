@@ -1,0 +1,74 @@
+--**--DUMPING FILE PATHS--**--
+Shamelessly stolen from: https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir
+
+Most of the time, just the following:
+  dir /b > dir.txt
+This dumps all the files by their name into a textfile called dir.txt.  The file will dump into the active directory.  This also includes anything in a subfolder along with its subfolder path.
+
+--**--FOR LOOPS--**--
+Mostly stolen from: https://www.poftut.com/loops-windows-ms-dos-command-propmpt/
+and then also: https://ss64.com/nt/for_f.html
+and: https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/for
+
+First, know that the for loops run over a text file where a carriage return (or new line?) indicates the next iteration of the for loop.  So, make a .txt file with a new array of data for the for loop on each line.
+
+Second, the default separator in that array is a comma.  
+
+Syntax:
+	FOR /F ["options"] %%parameter IN (filenameset) DO command 
+
+The beginning stub "FOR" is a way to get the for loop going.
+
+"/F" indicates that we're running the loop over a set of data from a file.
+
+["options"]:
+      delims=xxx   The delimiter character(s). Default for strings = a space or TAB.
+
+      skip=n       A number of lines to skip at the beginning of the file. 
+                    (default = 0)
+ 
+      eol=;        Character at the start of each line to indicate a comment 
+                   The default is a semicolon ; 
+
+      tokens=n     Specifies which numbered items to read from each line 
+                  (default = 1)
+
+      usebackq     Use the alternate quoting style:
+                   - Instead of double quotes use single quotes for 'Text string to process'
+                   - Use double quotes for long file names in "filenameset".
+                   - Use back quotes for `command to process`
+  
+%%parameter is your first variable.  The order of these placeholders is the order in which your array will be processed.  So, in this example, %%parameter indicates the first element in the given array.  If there were more variables to be used, you don't have to change the %%parameter to a single letter.  Instead, you'd add a token counter and then use the subsequent letters to iterate across the array of data.
+
+(filenameset) is the file with all the data to loop over
+
+command is simply your usual command (ex. mv \File.txt \Folder\)
+
+
+  FOR /F eol=; tokens=2,3* delims=, %i in (myfile.txt) do @echo %i %j %k
+  
+In this example:
+  ignores lines that begin with a semicolon
+  the read tokens are the second, third, and beyond tokens meaning the first is skipped
+  delims are set to commas instead of the default spaces or tabs
+  myfile.txt is in the current directory
+  the command does an @echo to the second array element (%i), the third (%j), and the a subsequent elements if it exists (%k)
+  
+So, to do a mass move, create a text file with your files to move with some delimeter separating them from the directory to move them to.  An example of this might be:
+
+  FOR /F tokens=1,2 delims=| %i IN (move.txt) DO move %i %j
+
+And move.txt might look like:
+
+  1.pdf|C:\Users\Username\Desktop\New Folder\
+  2.pdf|C:\Users\Username\Desktop\New Folder\
+  
+The uses of a pipe delimeter is demonstrated to show the format, especially if there are spaces in the directories.  You can also just enclose the whole thing with quotation marks to avoid doing this.  Here's what that would look like:
+
+  FOR /F tokens=1,2 %i IN (move.txt) DO move %i %j
+  
+move.txt
+
+  "1.pdf" "C:\Users\Username\Desktop\New Folder\"
+  "2.pdf" "C:\Users\Username\Desktop\New Folder\"
+  
