@@ -65,10 +65,15 @@ And move.txt might look like:
   
 The uses of a pipe delimeter and semicolon delimeter is demonstrated to show the format, especially if there are spaces in the directories.  This also shows that you can have multiple delimeters (no separation necessary).  You can also just enclose the whole thing with quotation marks to avoid doing this.  Here's what that would look like:
 
-  FOR /F "tokens=1,2" %i IN (move.txt) DO move %i %j
+  FOR /F "tokens=1,2 eol=;" %i IN (move.txt) DO move %i %j
   
 move.txt
 
   "1.pdf" "C:\Users\Username\Desktop\New Folder\"
   "2.pdf" "C:\Users\Username\Desktop\New Folder\"
-  
+
+Rename
+
+;FOR /F "tokens=1,2 eol=; delims=|" %i IN (rename.txt) DO rename %i %j
+"1.ipt.stp"|"1.stp"
+"2.iam.stp"|"2.stp"
